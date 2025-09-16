@@ -10,7 +10,7 @@
 
 ### Abstract
 
-Accurate detection of insecticide resistance in *Anopheles* mosquitoes is critical for effective malaria control, yet current analytical methods are often confounded by complex population structures. This project addressed this challenge by developing a robust, cloud-native toolkit for Genome-Wide Association Studies (GWAS). The core of the project was a two-phase pipeline: a highly sensitive initial scan to identify candidate regions, followed by a rigorous verification step using advanced statistical models—including Mixed-Effects and Bayesian approaches—to eliminate false positives. A key finding was that spurious signals from population structure can be stronger than true biological signals, validating the necessity of this two-step design. The final deliverable is a suite of validated Python tools, analysis notebooks, and an interactive dashboard prototype that provide a clear, statistically sound workflow for identifying novel resistance markers from complex genomic data.
+Accurate detection of insecticide resistance in *Anopheles* mosquitoes is critical for effective malaria control, yet current analytical methods are often confounded by complex population structures. This project addressed this challenge by developing a robust, cloud-native toolkit for Genome-Wide Association Studies (GWAS). The core of the project was a two-phase pipeline: a highly sensitive initial scan to identify candidate regions, followed by a rigorous verification step using advanced statistical models - including Mixed-Effects and Bayesian approaches—to eliminate false positives. A key finding was that spurious signals from population structure can be stronger than true biological signals, validating the necessity of this two-step design. The final deliverable is a suite of validated Python tools, analysis notebooks, and an interactive dashboard prototype that provide a clear, statistically sound workflow for identifying novel resistance markers from complex genomic data.
 
 ---
 
@@ -30,6 +30,11 @@ My work on this project was a journey of building, testing, and refining a compl
 -   **Why it matters:** Real labeled data was sparse. The simulator became the bedrock of the entire project, allowing me to create a "ground truth" dataset. It was essential for rigorously testing and debugging all the statistical models before using them on real, messy data.
 -   **How it works:** The simulator uses a probabilistic approach, calculating a mosquito's resistance based on the presence of key variants (like *Vgsc*) and adding realistic confounding noise based on the sample's country of origin.
 -   **Personal note:** My first merged PR to the main API was a huge moment for me. And building the simulator felt like designing my own experiment; it gave me the confidence to challenge the models and trust my results when they produced something unexpected.
+
+![Simulated Country Effects](figure1_country_effects.png)
+**Figure 1:** A bar plot showing the different mean resistance rates per country in the simulated dataset. This highlights the strong, built-in confounding effect of population structure that the statistical models must account for.
+
+
 
 #### 2. The Model Suite: From Baseline to Bayesian
 
@@ -62,13 +67,13 @@ My work on this project was a journey of building, testing, and refining a compl
 
 | Milestone                      | Short description                                                              | Status      | Link (PR / notebook / script)                                                                                                                              |
 | :----------------------------- | :----------------------------------------------------------------------------- | :---------- | :-------------------------------------------------------------------------------------------------------------------------------------- |
-| **Phenotype Data Loading**     | Contributed functions to the main `malariagen_data` API for cloud data access. | **Merged**  | [[Link to Merged PR in malariagen/malariagen-data-python]](https://github.com/malariagen/malariagen-data-python/pull/792) |
-| **Data Simulation Framework**  | Built the `ResistanceSimulator` to create validation datasets with confounding.| **Merged**  | [[`src/data/simulation.py`]([Link to file in your repo])](https://github.com/malariagen/vector_gwas_exploration/blob/master/src/data/simulation.py) |
-| **Initial Model Suite**        | Implemented `LogisticRegression` and `MixedEffects` models.                    | **Merged**  | [[`src/models/mixed_effects.py`]([Link to file in your repo])](https://github.com/malariagen/vector_gwas_exploration/blob/master/src/models/mixed_effects.py) |
-| **Bayesian Model**             | Implemented a robust and flexible `BayesianModel` class with PyMC.             | **Open PR** | [[Link to your Bayesian Model PR]](https://github.com/malariagen/vector_gwas_exploration/pull/10) |
-| **GWAS Scanner & Validation**  | Optimized the scanner and performed positive/negative control tests.           | **Open PR** | [[Link to your GWAS Scanner PR]](https://github.com/malariagen/vector_gwas_exploration/pull/4) |
+| **Phenotype Data Loading**     | Contributed functions to the main `malariagen_data` API for cloud data access. | **Merged**  | [The phenotypes functions PR](https://github.com/malariagen/malariagen-data-python/pull/792) |
+| **Data Simulation Framework**  | Built the `ResistanceSimulator` to create validation datasets with confounding.| **Merged**  | [`src/data/simulation.py`](https://github.com/malariagen/vector_gwas_exploration/blob/master/src/data/simulation.py) |
+| **Initial Model Suite**        | Implemented `LogisticRegression` and `MixedEffects` models.                    | **Merged**  | [`src/models/mixed_effects.py`](https://github.com/malariagen/vector_gwas_exploration/blob/master/src/models/mixed_effects.py) |
+| **Bayesian Model**             | Implemented a robust and flexible `BayesianModel` class with PyMC.             | **Open PR** | [Bayesian Model PR](https://github.com/malariagen/vector_gwas_exploration/pull/10) |
+| **GWAS Scanner & Validation**  | Optimized the scanner and performed positive/negative control tests.           | **Open PR** | [GWAS Scanner PR](https://github.com/malariagen/vector_gwas_exploration/pull/4) |
 | **CI/CD & Code Quality**       | Set up and fixed CI checks for code quality using `black` and `ruff`.            | **Merged**  | https://github.com/malariagen/vector_gwas_exploration/pull/8 |
-| **Interactive Visualization**  | Built the final dashboard and integrated it with mock data.                    | **Open PR** | [[Link to your Visualization PR]](https://github.com/malariagen/vector_gwas_exploration/pull/12) |
+| **Interactive Visualization**  | Built the final dashboard and integrated it with mock data.                    | **Open PR** | [Visualization PR](https://github.com/malariagen/vector_gwas_exploration/pull/12) |
 | **Full Genome Scan**           | Run the full genome scan to generate the final dataset.                        | In Progress | `notebooks/09_run_full_gwas_scan.ipynb` |
 ---
 
@@ -76,7 +81,13 @@ My work on this project was a journey of building, testing, and refining a compl
 
 -   **Population Structure is the Dominant Signal:** My most critical finding is that confounding from population structure is a major factor in this dataset. The uncorrected Chi-squared scan produced a false-positive signal in our negative control region (`-log10(p) = 6.6`) that was **stronger than the true signal** from the known resistance gene *Vgsc* (`-log10(p) = 5.8`).
 
+  ![GWAS Positive Control Result](figure2_gwas_validation.png)
+**Figure 2:** The result of the `GWASScanner` on the positive control region on chromosome 2L. The scan correctly identifies a strong, statistically significant peak of association (`-log10(p) ≈ 5.8`) that aligns with the location of the *Vgsc* gene, validating the pipeline's sensitivity to detect major resistance loci.
+
 -   **The "Deceptive" Interaction:** The baseline `LogisticRegressionGWAS` model initially appeared to find a strong, significant interaction effect between genes. However, the more robust `MixedEffectsGWAS` model correctly concluded this was a spurious finding, demonstrating that the simpler model was being "tricked" by the un-modeled country-level effects.
+
+  ![Mixed-Effects Model Validation](figure3_mixed_effects_validation.png)
+**Figure 3:** Validation of the `MixedEffectsGWAS` model on the simulated data. The model accurately estimates the true effect sizes for both the additive (left) and interaction (right) models. Crucially, it correctly finds that the interaction term is not statistically significant, demonstrating its ability to control for the confounding effects that misled simpler models.
 
 -   **Validation of the Two-Step Approach:** Together, these findings provide a powerful, data-driven justification for the project's core two-step design. They prove that a simple, sensitive scan is insufficient on its own and that a rigorous verification step with models that control for population structure is absolutely essential to find true signals.
 
@@ -168,7 +179,7 @@ It’s a powerful way to turn frustration into a fresh start.
 
 All code, models, and notebooks are publicly available in the project repository.
 
--   **Repository URL:** [[Link to Your Main Project GitHub Repo]](https://github.com/malariagen/vector_gwas_exploration)
+-   **Repository URL:** [Project GitHub Repo](https://github.com/malariagen/vector_gwas_exploration)
 -   **Key Scripts:**
     -   GWAS Scanner: `src/analysis/gwas/scanner.py`
     -   Verification Models: `src/models/`
@@ -216,7 +227,7 @@ python src/viz/build_explorer.py
 
 **Step 4: View the result**
 The script will generate a single, self-contained HTML file. Open it in your web browser to explore the interactive dashboard.
-File Location: output/gwas_explorer.html
+* File Location: `output/gwas_explorer.html`
 
 ---
 
