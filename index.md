@@ -168,7 +168,7 @@ It’s a powerful way to turn frustration into a fresh start.
 
 All code, models, and notebooks are publicly available in the project repository.
 
--   **Repository URL:** [Link to Your Main Project GitHub Repo]
+-   **Repository URL:** [[Link to Your Main Project GitHub Repo]](https://github.com/malariagen/vector_gwas_exploration)
 -   **Key Scripts:**
     -   GWAS Scanner: `src/analysis/gwas/scanner.py`
     -   Verification Models: `src/models/`
@@ -187,8 +187,8 @@ This project uses Poetry for dependency management.
 
 ```bash
 # Clone the repository
-git clone [URL of your repo]
-cd [name-of-your-repo]
+git clone https://github.com/malariagen/vector_gwas_exploration.git
+cd vector_gwas_exploration
 
 # Install dependencies using Poetry
 poetry install
