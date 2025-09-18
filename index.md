@@ -1,6 +1,6 @@
 # Google Summer of Code 2025 Final Report: Cloud-Native Tools for Detecting Novel Insecticide Resistance in Malaria Mosquitoes
 
-- **Contributor:** Laarej Mohamed
+- **Contributor:** Mohamed Laarej
 - **Organisation:** MalariaGEN
 - **Mentors:** Anastasia Hernandez-Koutoucheva, Chris Clarkson, Jon Brenas
 - **Project Repository:** https://github.com/malariagen/vector_gwas_exploration 
@@ -10,13 +10,13 @@
 
 ### Abstract
 
-Accurate detection of insecticide resistance in *Anopheles* mosquitoes is critical for effective malaria control, yet current analytical methods are often confounded by complex population structures. This project addressed this challenge by developing a robust, cloud-native toolkit for Genome-Wide Association Studies (GWAS). The core of the project was a two-phase pipeline: a highly sensitive initial scan to identify candidate regions, followed by a rigorous verification step using advanced statistical models - including Mixed-Effects and Bayesian approaches—to eliminate false positives. A key finding was that spurious signals from population structure can be stronger than true biological signals, validating the necessity of this two-step design. The final deliverable is a suite of validated Python tools, analysis notebooks, and an interactive dashboard prototype that provide a clear, statistically sound workflow for identifying novel resistance markers from complex genomic data.
+Accurate detection of insecticide resistance in *Anopheles* mosquitoes is critical for effective malaria control, yet current analytical methods are often confounded by complex population structures. This project addressed this challenge by developing a robust, cloud-native toolkit for Genome-Wide Association Studies (GWAS). The core of the project was a two-phase pipeline: a highly sensitive initial scan to identify candidate regions, followed by a rigorous verification step using advanced statistical models - including Mixed-Effects and Bayesian approaches - to eliminate false positives. A key finding was that spurious signals from population structure can be stronger than true biological signals, validating the necessity of this two-step design. The final deliverable is a suite of validated Python tools, analysis notebooks, and an interactive dashboard prototype that provide a clear, statistically sound workflow for identifying novel resistance markers from complex genomic data.
 
 ---
 
 ### 1. Motivation & Overview
 
-In the fight against malaria, a key challenge is that insecticide resistance can evolve in many different ways across diverse mosquito populations. A simple genetic test might work in one country but fail in another because it's confounded by the mosquitoes' different genetic backgrounds. This leads to misleading results and can misdirect public health efforts. This project tackled this gap by building a computational toolkit designed to untangle these complex signals. My goal was to create a workflow that could first cast a wide net to find all potential resistance signals and then, most importantly, use more sophisticated statistical methods to filter out the false alarms caused by population structure. This work matters because reliable genetic surveillance is the foundation of any effective, long-term strategy to manage insecticide resistance and control malaria.
+Recent progress in the fight against malaria has been hindered by the rise of insecticide resistance in mosquitoes. Resistance can manifest and evolve in different ways across diverse mosquito populations, and the misidentification of the resistance mechanisms present in a specific population can lead to wasted public health efforts. This project tackled this issue by building a computational toolkit designed to correctly identify the complex signals of insecticide resistance. My goal was to create a workflow that could first cast a wide net to find all potential resistance signals and then, most importantly, use more sophisticated statistical methods to filter out the false alarms caused by population structure. This work matters because reliable genetic surveillance is the foundation of any effective, long-term strategy to manage insecticide resistance and control malaria.
 
 ---
 
@@ -29,7 +29,7 @@ My work on this project was a journey of building, testing, and refining a compl
 -   **What I built:** The first critical step was contributing functions directly to the `malariagen_data` API to load real-world phenotype data from the cloud. To supplement this, I built a `ResistanceSimulator` that generates realistic phenotype data based on known genetic markers.
 -   **Why it matters:** Real labeled data was sparse. The simulator became the bedrock of the entire project, allowing me to create a "ground truth" dataset. It was essential for rigorously testing and debugging all the statistical models before using them on real, messy data.
 -   **How it works:** The simulator uses a probabilistic approach, calculating a mosquito's resistance based on the presence of key variants (like *Vgsc*) and adding realistic confounding noise based on the sample's country of origin.
--   **Personal note:** My first merged PR to the main API was a huge moment for me. And building the simulator felt like designing my own experiment; it gave me the confidence to challenge the models and trust my results when they produced something unexpected.
+-   **Personal note:** My first merged PR to the main API was a huge moment for me. Building the simulator felt like designing my own experiment; it gave me the confidence to challenge the models and trust my results when they produced something unexpected.
 
 ![Simulated Country Effects](figure1_country_effects.png)
 **Figure 1:** A bar plot showing the different mean resistance rates per country in the simulated dataset. This highlights the strong, built-in confounding effect of population structure that the statistical models must account for.
@@ -40,7 +40,7 @@ My work on this project was a journey of building, testing, and refining a compl
 
 -   **What I built:** A suite of three model classes with a consistent, interchangeable interface (`.fit()`, `.get_params()`): `LogisticRegressionGWAS`, `MixedEffectsGWAS`, and a flexible `BayesianModel` using PyMC.
 -   **Why it matters:** This provides a "panel" of statistical tools for the verification step. The simple Logistic Regression helped establish a baseline, while the Mixed-Effects and Bayesian models were essential for tackling the complex statistical challenges like population structure, which later proved to be critical.
--   **How it works:** Each class is a wrapper for a major statistical library (`statsmodels` or `PyMC`). I designed them to be plug-and-play components for the verification pipeline, all capable of testing for gene-gene interaction effects.
+-   **How it works:** Each class is a wrapper for a major statistical library (`statsmodels` for regression models and `PyMC` for the Bayesian approach). I designed them to be plug-and-play components for the verification pipeline, all capable of testing for gene-gene interaction effects. 
 -   **Personal note:** The journey from implementing the simple logistic model to debugging the PyMC sampler for the Bayesian model was a massive learning curve. Stabilizing the model against numerical errors and seeing it run efficiently was a difficult but incredibly rewarding challenge.
 
 #### 3. The Two-Phase GWAS Pipeline: A Necessary Design
@@ -56,14 +56,13 @@ My work on this project was a journey of building, testing, and refining a compl
 
 -   **What I built:** A functional, three-panel interactive dashboard prototype (`build_explorer.py`) using Bokeh, based directly on my project proposal.
 -   **Why it matters:** Static Manhattan plots are not enough to explore complex results. This tool directly addresses the project's goal of creating an intuitive way for researchers to explore the data, from a genome-wide overview down to a single SNP's model comparison.
--   **How it works:** It's a standalone HTML file that uses `CustomJS` callbacks to link a genome-wide Manhattan plot, a regional "zoom-in" plot, and a final SNP detail panel, allowing users to explore the results without needing a Python environment.
+-   **How it works:** It's a standalone HTML file that uses `CustomJS` callbacks in Bokeh to link a genome-wide Manhattan plot, a regional "zoom-in" plot, and a final SNP detail panel. This allows users to explore the results without needing a Python environment.
 -   **Personal note:** Seeing the dashboard come to life was incredibly rewarding. Taking the project from raw data and statistical models to a polished, interactive user interface felt like I was building a complete, professional tool from start to finish.
 
 ---
 
 ### 3. Milestones & Methods
 
-### 3. Milestones & Methods
 
 | Milestone                      | Short description                                                              | Status      | Link (PR / notebook / script)                                                                                                                              |
 | :----------------------------- | :----------------------------------------------------------------------------- | :---------- | :-------------------------------------------------------------------------------------------------------------------------------------- |
@@ -77,6 +76,7 @@ My work on this project was a journey of building, testing, and refining a compl
 | **Full Genome Scan**           | Run the full genome scan to generate the final dataset.                        | In Progress | `notebooks/09_run_full_gwas_scan.ipynb` |
 ---
 
+
 ### 4. Results & Key Findings
 
 -   **Population Structure is the Dominant Signal:** My most critical finding is that confounding from population structure is a major factor in this dataset. The uncorrected Chi-squared scan produced a false-positive signal in our negative control region (`-log10(p) = 6.6`) that was **stronger than the true signal** from the known resistance gene *Vgsc* (`-log10(p) = 5.8`).
@@ -84,10 +84,14 @@ My work on this project was a journey of building, testing, and refining a compl
   ![GWAS Positive Control Result](figure2_gwas_validation.png)
 **Figure 2:** The result of the `GWASScanner` on the positive control region on chromosome 2L. The scan correctly identifies a strong, statistically significant peak of association (`-log10(p) ≈ 5.8`) that aligns with the location of the *Vgsc* gene, validating the pipeline's sensitivity to detect major resistance loci.
 
+
+
 -   **The "Deceptive" Interaction:** The baseline `LogisticRegressionGWAS` model initially appeared to find a strong, significant interaction effect between genes. However, the more robust `MixedEffectsGWAS` model correctly concluded this was a spurious finding, demonstrating that the simpler model was being "tricked" by the un-modeled country-level effects.
 
   ![Mixed-Effects Model Validation](figure3_mixed_effects_validation.png)
 **Figure 3:** Validation of the `MixedEffectsGWAS` model on the simulated data. The model accurately estimates the true effect sizes for both the additive (left) and interaction (right) models. Crucially, it correctly finds that the interaction term is not statistically significant, demonstrating its ability to control for the confounding effects that misled simpler models.
+
+
 
 -   **Validation of the Two-Step Approach:** Together, these findings provide a powerful, data-driven justification for the project's core two-step design. They prove that a simple, sensitive scan is insufficient on its own and that a rigorous verification step with models that control for population structure is absolutely essential to find true signals.
 
@@ -162,7 +166,7 @@ The most rewarding parts of my GSoC experience came when I pushed beyond the bas
 For example, building the interactive dashboard wasn’t just about finishing a task — it was a chance to be creative and think deeply about how to make the results accessible and useful for researchers.  
 Always look for opportunities to **add your own creative touch** — it’s what makes the project truly yours and much more impactful.
 
-### 4. When Stuck, Zoom Out
+### 5. When Stuck, Zoom Out
 There were several times I felt completely stuck on a technical bug or a confusing result.  
 The best strategy I found was to take a step back from the code and rethink the **end goal**.  
 
