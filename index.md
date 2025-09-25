@@ -60,7 +60,8 @@ My work on this project was a journey of building, testing, and refining a compl
 -   **Personal note:** Seeing the dashboard come to life was incredibly rewarding. Taking the project from raw data and statistical models to a polished, interactive user interface felt like I was building a complete, professional tool from start to finish.
 
 ![GWAS Explorer Dashboard Workflow](figure4_dashboard_workflow.png)
-**Figure 4:** The complete interactive workflow of the GWAS Explorer dashboard. A user can (1) select a region of interest on the genome-wide Manhattan plot, which automatically updates (2) the regional plot with verified hits and gene annotations, and then (3) click a specific hit to view a detailed, multi-model comparison.
+**Figure 4:** The complete interactive workflow of the GWAS Explorer dashboard. A user can (1) select a region of interest on the genome-wide Manhattan plot, which automatically updates (2) the regional plot with verified hits and gene annotations, and then (3) click a specific hit to view a detailed statistical summary.
+
 ---
 
 ### 3. Milestones & Methods
