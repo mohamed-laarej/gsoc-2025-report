@@ -63,19 +63,15 @@ My work on this project was a journey of building, testing, and refining a compl
 
 ### 3. Milestones & Methods
 
-
 | Milestone                      | Short description                                                              | Status      | Link (PR / notebook / script)                                                                                                                              |
 | :----------------------------- | :----------------------------------------------------------------------------- | :---------- | :-------------------------------------------------------------------------------------------------------------------------------------- |
 | **Phenotype Data Loading**     | Contributed functions to the main `malariagen_data` API for cloud data access. | **Merged**  | [The phenotypes functions PR](https://github.com/malariagen/malariagen-data-python/pull/792) |
-| **Data Simulation Framework**  | Built the `ResistanceSimulator` to create validation datasets with confounding.| **Merged**  | [`src/data/simulation.py`](https://github.com/malariagen/vector_gwas_exploration/blob/master/src/data/simulation.py) |
-| **Initial Model Suite**        | Implemented `LogisticRegression` and `MixedEffects` models.                    | **Merged**  | [`src/models/mixed_effects.py`](https://github.com/malariagen/vector_gwas_exploration/blob/master/src/models/mixed_effects.py) |
-| **Bayesian Model**             | Implemented a robust and flexible `BayesianModel` class with PyMC.             | **Open PR** | [Bayesian Model PR](https://github.com/malariagen/vector_gwas_exploration/pull/10) |
+| **Data Simulation Framework**  | Built the `ResistanceSimulator` to create validation datasets with confounding.| **Merged**  | [`src/data/simulation.py`](https://github.com/malariagen/vector_gwas_exploration/blob/main/src/data/simulation.py) |
+| **Initial Model Suite**        | Implemented `LogisticRegression` and `MixedEffects` models.                    | **Merged**  | [`src/models/mixed_effects.py`](https://github.com/malariagen/vector_gwas_exploration/blob/main/src/models/mixed_effects.py) |
+| **Bayesian Model**             | Implemented a robust and flexible `BayesianModel` class with PyMC.             | **Merged**  | [Bayesian Model PR](https://github.com/malariagen/vector_gwas_exploration/pull/10) |
 | **GWAS Scanner & Validation**  | Optimized the scanner and performed positive/negative control tests.           | **Open PR** | [GWAS Scanner PR](https://github.com/malariagen/vector_gwas_exploration/pull/4) |
-| **CI/CD & Code Quality**       | Set up and fixed CI checks for code quality using `black` and `ruff`.            | **Merged**  | https://github.com/malariagen/vector_gwas_exploration/pull/8 |
-| **Interactive Visualization**  | Built the final dashboard and integrated it with mock data.                    | **Open PR** | [Visualization PR](https://github.com/malariagen/vector_gwas_exploration/pull/12) |
-| **Full Genome Scan**           | Run the full genome scan to generate the final dataset.                        | In Progress | `notebooks/09_run_full_gwas_scan.ipynb` |
----
-
+| **CI/CD & Code Quality**       | Set up and fixed CI checks for code quality using `black` and `ruff`.            | **Merged**  | [CI/CD PR](https://github.com/malariagen/vector_gwas_exploration/pull/8) |
+| **Interactive Visualization**  | Built the final dashboard prototype and integrated it with mock data.          | **Open PR** | [Visualization PR](https://github.com/malariagen/vector_gwas_exploration/pull/12) |
 
 ### 4. Results & Key Findings
 
@@ -93,11 +89,23 @@ My work on this project was a journey of building, testing, and refining a compl
 
 
 
--   **Validation of the Two-Step Approach:** Together, these findings provide a powerful, data-driven justification for the project's core two-step design. They prove that a simple, sensitive scan is insufficient on its own and that a rigorous verification step with models that control for population structure is absolutely essential to find true signals.
+## Key Questions Raised by the Initial Scan
 
--   **Deliverable: A Functional Dashboard Prototype:** I have successfully created a working prototype of the GWAS Explorer dashboard. It is a standalone HTML file that loads mock data and demonstrates the full interactive workflow, from the genome-wide Manhattan plot to the regional plot and the final SNP detail panel, which includes a comparative forest plot.
+The strength of the false-positive signal in our negative control test prompts three important considerations for future work:
 
-My key takeaway is that in real-world genomics, understanding and correcting for confounding is not just a minor detail—it can be the most important factor in the entire analysis.
+1. **It confirms the necessity of our two-phase approach.**  
+   A simple scan is clearly insufficient, and a rigorous verification step with models like *MixedEffectsGWAS* is essential to filter out these strong, spurious signals.
+
+2. **It questions the trustworthiness of the scanner.**  
+   While sensitive, the Chi-squared test might be generating too much noise. Future work could explore whether a more sophisticated method for the initial scan (like a linear mixed model) might provide a cleaner set of initial candidates for Phase 2.
+
+3. **It challenges our assumptions.**  
+   There is a small but real possibility that the "gene desert" region is not a true negative control and that we have uncovered a novel biological signal. This surprising result warrants further investigation.
+
+
+### Key Takeaway
+A simple GWAS scan on complex data can raise more questions than it answers, highlighting the **absolute necessity of a multi-layered, statistically robust verification strategy**.
+
 
 ---
 
@@ -119,22 +127,21 @@ I saw firsthand how a simple piece of code, when validated and explained clearly
 
 This project has successfully built and validated the core components of the GWAS pipeline. The following are concrete and prioritized next steps to build on this foundation:
 
-### 1. Run Full Genome-Wide Scan (High Priority)
-- **Why it matters**: This is the final data generation step required to populate the dashboard with real results from the entire genome.  
-- **Complexity**: Low (computationally intensive, but the code is ready). The plan is to run the validated GWASScanner one chromosome at a time.  
+### Run Full Genome-Wide Scan & Verify Top Hits (High Priority):
+    - **Why it matters**: This is the key data generation step. It involves using the validated `GWASScanner` to produce the full list of candidate SNPs, and then using the `GWASVerifier` with our advanced models to filter these results.
+    - **Complexity**: Low (computationally intensive, but the code is ready). The plan is to run the scanner one chromosome at a time. This is the first step before the dashboard can be populated with real data.
 
-### 2. Implement a Robust Testing Suite (High Priority)
-- **Why it matters**: To ensure the long-term health and reliability of the toolkit, a formal testing suite using a framework like `pytest` is essential. This will allow us, and any future contributors, to add new code or refactor existing code with confidence, knowing that automated tests will catch any regressions or bugs.  
-- **Complexity**: Medium. Involves writing unit tests for key functions in the models and scanner, and setting up CI to run these tests automatically.  
+### Implement a Robust Testing Suite (High Priority):
+    - **Why it matters**: To ensure the long-term health and reliability of the toolkit, a formal testing suite using a framework like `pytest` is essential. This will allow future contributors to add or refactor code with confidence, knowing that automated tests will catch any regressions.
+    - **Complexity**: Medium. Involves writing unit tests for key functions in the models and scanner.
 
-### 3. Implement Hierarchical Bayesian Model (Medium Priority)
-- **Why it matters**: My analysis proved that controlling for population structure is critical. Implementing a Hierarchical Bayesian Model would complete our suite of advanced verification tools and allow for a powerful comparison of frequentist and Bayesian approaches.  
-- **Complexity**: Medium. The existing `BayesianModel` provides a strong foundation for this.  
+### Implement Hierarchical Bayesian Model (Medium Priority):
+    - **Why it matters**: My analysis proved that controlling for population structure is critical. Implementing a Hierarchical Bayesian Model would complete our suite of advanced verification tools and allow for a powerful comparison of frequentist and Bayesian approaches.
+    - **Complexity**: Medium. The existing `BayesianModel` provides a strong foundation for this.
 
-### 4. Integrate Real Data into Dashboard (Medium Priority)
-- **Why it matters**: This is the final step to complete the visualization, moving from the prototype to a fully functional tool for researchers.  
-- **Complexity**: Low to Medium. Involves updating the dashboard's data loading scripts to use the output from the full GWAS scan.  
-
+### Integrate Real Data into Dashboard (Medium Priority):
+    - **Why it matters**: This is the final step to complete the visualization, moving from the prototype to a fully functional tool for researchers. This is dependent on the completion of the full scan.
+    - **Complexity**: Low to Medium. Involves updating the dashboard's data loading scripts.
 ---
 
 
