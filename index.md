@@ -89,7 +89,7 @@ My work on this project was a journey of building, testing, and refining a compl
 
 
 
-## Key Questions Raised by the Initial Scan
+-   **Key Questions Raised by the Initial Scan**
 
 The strength of the false-positive signal in our negative control test prompts three important considerations for future work:
 
@@ -132,16 +132,16 @@ This project has successfully built and validated the core components of the GWA
     - **Complexity**: Low (computationally intensive, but the code is ready). The plan is to run the scanner one chromosome at a time. This is the first step before the dashboard can be populated with real data.
 
 ### Implement a Robust Testing Suite (High Priority):
-    - **Why it matters**: To ensure the long-term health and reliability of the toolkit, a formal testing suite using a framework like `pytest` is essential. This will allow future contributors to add or refactor code with confidence, knowing that automated tests will catch any regressions.
-    - **Complexity**: Medium. Involves writing unit tests for key functions in the models and scanner.
+- **Why it matters**: To ensure the long-term health and reliability of the toolkit, a formal testing suite using a framework like `pytest` is essential. This will allow future contributors to add or refactor code with confidence, knowing that automated tests will catch any regressions.
+- **Complexity**: Medium. Involves writing unit tests for key functions in the models and scanner.
 
 ### Implement Hierarchical Bayesian Model (Medium Priority):
-    - **Why it matters**: My analysis proved that controlling for population structure is critical. Implementing a Hierarchical Bayesian Model would complete our suite of advanced verification tools and allow for a powerful comparison of frequentist and Bayesian approaches.
-    - **Complexity**: Medium. The existing `BayesianModel` provides a strong foundation for this.
+- **Why it matters**: My analysis proved that controlling for population structure is critical. Implementing a Hierarchical Bayesian Model would complete our suite of advanced verification tools and allow for a powerful comparison of frequentist and Bayesian approaches.
+- **Complexity**: Medium. The existing `BayesianModel` provides a strong foundation for this.
 
 ### Integrate Real Data into Dashboard (Medium Priority):
-    - **Why it matters**: This is the final step to complete the visualization, moving from the prototype to a fully functional tool for researchers. This is dependent on the completion of the full scan.
-    - **Complexity**: Low to Medium. Involves updating the dashboard's data loading scripts.
+- **Why it matters**: This is the final step to complete the visualization, moving from the prototype to a fully functional tool for researchers. This is dependent on the completion of the full scan.
+- **Complexity**: Low to Medium. Involves updating the dashboard's data loading scripts.
 ---
 
 
