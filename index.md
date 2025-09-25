@@ -52,13 +52,15 @@ My work on this project was a journey of building, testing, and refining a compl
     -   The **Verifier** (`verifier.py`) is a model-agnostic framework that takes the top hits from the scanner and re-analyzes them with the more computationally expensive but statistically robust models.
 -   **Personal note:** The moment I realized *why* the scanner was finding false positives was the biggest turning point. It shifted my perspective from just "building a tool" to understanding the deep statistical story the data was telling.
 
-#### 4. Interactive Visualization Dashboard
+#### 4. Interactive Visualization Dashboard: From Data to Discovery
 
--   **What I built:** A functional, three-panel interactive dashboard prototype (`build_explorer.py`) using Bokeh, based directly on my project proposal.
+-   **What I built:** A functional, three-panel interactive dashboard prototype (`build_explorer.py`) using `Bokeh`, based directly on my project proposal.
 -   **Why it matters:** Static Manhattan plots are not enough to explore complex results. This tool directly addresses the project's goal of creating an intuitive way for researchers to explore the data, from a genome-wide overview down to a single SNP's model comparison.
 -   **How it works:** It's a standalone HTML file that uses `CustomJS` callbacks in Bokeh to link a genome-wide Manhattan plot, a regional "zoom-in" plot, and a final SNP detail panel. This allows users to explore the results without needing a Python environment.
 -   **Personal note:** Seeing the dashboard come to life was incredibly rewarding. Taking the project from raw data and statistical models to a polished, interactive user interface felt like I was building a complete, professional tool from start to finish.
 
+![GWAS Explorer Dashboard Workflow](figure4_dashboard_workflow.png)
+**Figure 4:** The complete interactive workflow of the GWAS Explorer dashboard. A user can (1) select a region of interest on the genome-wide Manhattan plot, which automatically updates (2) the regional plot with verified hits and gene annotations, and then (3) click a specific hit to view a detailed, multi-model comparison.
 ---
 
 ### 3. Milestones & Methods
@@ -128,8 +130,8 @@ I saw firsthand how a simple piece of code, when validated and explained clearly
 This project has successfully built and validated the core components of the GWAS pipeline. The following are concrete and prioritized next steps to build on this foundation:
 
 ### Run Full Genome-Wide Scan & Verify Top Hits (High Priority):
-    - **Why it matters**: This is the key data generation step. It involves using the validated `GWASScanner` to produce the full list of candidate SNPs, and then using the `GWASVerifier` with our advanced models to filter these results.
-    - **Complexity**: Low (computationally intensive, but the code is ready). The plan is to run the scanner one chromosome at a time. This is the first step before the dashboard can be populated with real data.
+- **Why it matters**: This is the key data generation step. It involves using the validated `GWASScanner` to produce the full list of candidate SNPs, and then using the `GWASVerifier` with our advanced models to filter these results.
+- **Complexity**: Low (computationally intensive, but the code is ready). The plan is to run the scanner one chromosome at a time. This is the first step before the dashboard can be populated with real data.
 
 ### Implement a Robust Testing Suite (High Priority):
 - **Why it matters**: To ensure the long-term health and reliability of the toolkit, a formal testing suite using a framework like `pytest` is essential. This will allow future contributors to add or refactor code with confidence, knowing that automated tests will catch any regressions.
