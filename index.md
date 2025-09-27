@@ -128,23 +128,61 @@ I saw firsthand how a simple piece of code, when validated and explained clearly
 
 ## 6. Future Work
 
-This project has successfully built and validated the core components of the GWAS pipeline. The following are concrete and prioritized next steps to build on this foundation:
+This project has successfully built and validated the core components of the GWAS pipeline.  
+The following are **concrete and prioritized next steps** to transition this toolkit from a successful prototype into a fully-fledged discovery tool for malaria researchers.
 
-### Run Full Genome-Wide Scan & Verify Top Hits (High Priority):
-- **Why it matters**: This is the key data generation step. It involves using the validated `GWASScanner` to produce the full list of candidate SNPs, and then using the `GWASVerifier` with our advanced models to filter these results.
-- **Complexity**: Low (computationally intensive, but the code is ready). The plan is to run the scanner one chromosome at a time. This is the first step before the dashboard can be populated with real data.
+---
 
-### Implement a Robust Testing Suite (High Priority):
-- **Why it matters**: To ensure the long-term health and reliability of the toolkit, a formal testing suite using a framework like `pytest` is essential. This will allow future contributors to add or refactor code with confidence, knowing that automated tests will catch any regressions.
-- **Complexity**: Medium. Involves writing unit tests for key functions in the models and scanner.
+### 1. Run Full Genome-Wide Scan & Verify Top Hits (High Priority)
 
-### Implement Hierarchical Bayesian Model (Medium Priority):
-- **Why it matters**: My analysis proved that controlling for population structure is critical. Implementing a Hierarchical Bayesian Model would complete our suite of advanced verification tools and allow for a powerful comparison of frequentist and Bayesian approaches.
-- **Complexity**: Medium. The existing `BayesianModel` provides a strong foundation for this.
+- **Why it matters**:  
+  This is the key data generation step that will transform the dashboard from a demonstration into a real discovery tool, allowing researchers to interactively explore a complete, verified map of resistance signals across the entire genome.
 
-### Integrate Real Data into Dashboard (Medium Priority):
-- **Why it matters**: This is the final step to complete the visualization, moving from the prototype to a fully functional tool for researchers. This is dependent on the completion of the full scan.
-- **Complexity**: Low to Medium. Involves updating the dashboard's data loading scripts.
+- **Task**:  
+  Use the validated `GWASScanner` and `GWASVerifier` to produce the final dataset.
+
+- **Complexity**:  
+  Low (computationally intensive, but the code is ready).
+
+---
+
+### 2. Implement a Robust Testing Suite (High Priority)
+
+- **Why it matters**:  
+  Scientific results must be trustworthy. A formal testing suite with `pytest` ensures that any future updates won't accidentally break the core statistical logic, giving researchers long-term confidence in the tool's reliability.
+
+- **Task**:  
+  Write unit tests for key functions in the models and scanner, and integrate them with the CI pipeline.
+
+- **Complexity**:  
+  Medium.
+
+---
+
+### 3. Implement Hierarchical Bayesian Model (Medium Priority)
+
+- **Why it matters**:  
+  Analysis proved controlling for population structure is critical. A **Hierarchical Bayesian Model** would provide researchers with a powerful probabilistic measure of confidence for each hit, allowing them to see not just if a SNP is significant, but how likely it is to be a true driver of resistance.
+
+- **Task**:  
+  Create a new `HierarchicalBayesianModel` class that incorporates country-level effects, building on the existing `BayesianModel`.
+
+- **Complexity**:  
+  Medium.
+
+---
+
+### 4. Integrate Real Data into Dashboard (Medium Priority)
+
+- **Why it matters**:  
+  This is the final step to complete the visualization, moving the dashboard from a prototype to a fully functional tool that researchers can use for their own analyses.
+
+- **Task**:  
+  Update the dashboard's data loading scripts to use the output from the full genome scan.  
+  *(This is dependent on the completion of the scan.)*
+
+- **Complexity**:  
+  Low to Medium.
 ---
 
 
